@@ -1,13 +1,3 @@
-# This script is a URL expander and formatter that takes a list of shortened URLs as input, expands them to their original long URLs, and outputs the results in a user-selected format (CSV, TXT, or terminal). 
-#The script follows these main steps:
-
-# Accepts user input of multiple shortened URLs and an 'END' keyword to stop receiving input.
-# Processes each URL using the expand_url function, which sends a request to the httpstatus API to retrieve the expanded URL and its associated title.
-# If any error occurs while expanding the URL, the script calls the ask_gpt3 function from the gpt3_error_handler module to provide suggestions on how to fix the issue.
-# Processes the expanded URLs using the truncate_url function, which simplifies YouTube URLs by extracting video or playlist IDs and removes query strings for non-YouTube URLs.
-# Outputs the processed URLs in the user-selected format (CSV, TXT, or terminal).
-# This script provides an efficient way to expand and format a list of shortened URLs, making it easier to manage and analyze the original long URLs.
-
 import csv
 import json
 import re
@@ -16,6 +6,7 @@ import urllib.parse
 from bs4 import BeautifulSoup
 from gpt3_error_handler import ask_gpt3
 from utils import load_anim
+import threading
 
 def expand_url(short_url):
     # Sends a GET request to the shortened URL and follows redirects using httpstatus API
@@ -139,16 +130,30 @@ if __name__ == '__main__':
     print("3) Terminal")
   
     while True:
-        load_anim()
         output_format = input("Enter a number: ")
         if output_format == '1':
+            stop_event = threading.Event()
+            animation_thread = threading.Thread(target=load_anim, args=(stop_event,))
+            animation_thread.start()
             output_to_csv(urls)
-            break      
+            stop_event.set()
+            animation_thread.join()
+            break
         elif output_format == '2':
+            stop_event = threading.Event()
+            animation_thread = threading.Thread(target=load_anim, args=(stop_event,))
+            animation_thread.start()
             output_to_txt(urls)
+            stop_event.set()
+            animation_thread.join()
             break
         elif output_format == '3':
+            stop_event = threading.Event()
+            animation_thread = threading.Thread(target=load_anim, args=(stop_event,))
+            animation_thread.start()
             output_to_terminal(urls)
+            stop_event.set()
+            animation_thread.join()
             break
         else:
             print("Invalid input. Please enter 1, 2 or 3.")

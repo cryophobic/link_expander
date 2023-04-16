@@ -6,8 +6,11 @@ cursor_chars = ['|', '/', '-', '\\']
 
 
 # A little load animation to let users know something is happening
-def load_anim():
-    while True:
-        for cursor_char in cursor_chars:
-            print(f'\rProcessing... {cursor_char}', end='', flush=True)
+
+def load_anim(stop_event):
+    while not stop_event.is_set():
+        for cursor in '|/-\\':
+            print('Expanding URLs ' + cursor, end='\r')
             time.sleep(0.1)
+    print('\r', end='')
+    

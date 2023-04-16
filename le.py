@@ -15,6 +15,7 @@ import requests
 import urllib.parse
 from bs4 import BeautifulSoup
 from gpt3_error_handler import ask_gpt3
+from utils import load_anim
 
 def expand_url(short_url):
     # Sends a GET request to the shortened URL and follows redirects using httpstatus API
@@ -81,7 +82,7 @@ def truncate_url(expanded_url):
 
 def output_to_csv(urls):
     # Outputs the URLs to a CSV file
-    with open('urls.csv', 'w', newline='') as csvfile:
+    with open('output/urls.csv', 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(['Title', 'Short URL', 'Expanded URL', 'Truncated URL'])
         for short_url in urls:
@@ -95,7 +96,7 @@ def output_to_csv(urls):
 
 def output_to_txt(urls):
     # Outputs the URLs to a text file with each URL escaped to a new line
-    with open('urls.txt', 'w') as txtfile:
+    with open('output/urls.txt', 'w') as txtfile:
         for short_url in urls:
             expanded_url, title = expand_url(short_url)
             if expanded_url:
@@ -138,6 +139,7 @@ if __name__ == '__main__':
     print("3) Terminal")
   
     while True:
+        load_anim()
         output_format = input("Enter a number: ")
         if output_format == '1':
             output_to_csv(urls)
@@ -151,4 +153,4 @@ if __name__ == '__main__':
         else:
             print("Invalid input. Please enter 1, 2 or 3.")
 
-    print("Done.")
+    print("\rDone.")

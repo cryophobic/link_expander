@@ -3,4 +3,5 @@ test_files/
 .DS_Store
 .env
 LinkExpander.sublime-project
+LinkExpander.sublime-workspace
 to-do.md

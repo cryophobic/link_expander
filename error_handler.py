@@ -14,15 +14,15 @@ openai.organization = os.getenv("OPEN_AI_ORGANIZATION")
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 def ask_gpt(error_description):
-    prompt = f"An error occurred in my Python script: {error_description}. Can you provide a brief summary and a couple of possible solutions?"
+    prompt = f"An error occurred in my Python script: {error_description}. Please provide a brief summary and a couple of possible solutions."
 
     response = openai.Completion.create(
-        engine="davinci-codex",
+        engine="gpt-3.5-turbo",
         prompt=prompt,
         max_tokens=100,
         n=1,
         stop=None,
-        temperature=0.5,
+        temperature=0.6,
     )
 
     return response.choices[0].text.strip()
